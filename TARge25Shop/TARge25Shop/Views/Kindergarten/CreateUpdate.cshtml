@@ -1,0 +1,63 @@
+﻿@model TARge25Shop.Models.Kindergarten.KindergartenCreateUpdateViewModel
+
+@{
+    ViewData["Title"] = Model.Id == null
+        ? "Create kindergarten"
+        : "Edit kindergarten";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="CreateUpdate" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="CreatedAt" type="hidden" />
+    <input asp-for="UpdatedAt" type="hidden" />
+
+    <div class="form-group mb-3">
+        <label asp-for="GroupName" class="control-label">
+            Group name
+        </label>
+        <input asp-for="GroupName" class="form-control" />
+        <span asp-validation-for="GroupName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ChildrenCount" class="control-label">
+            Children count
+        </label>
+        <input asp-for="ChildrenCount"
+               class="form-control"
+               type="number"
+               min="0" />
+        <span asp-validation-for="ChildrenCount"
+              class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="KindergartenName" class="control-label">
+            Kindergarten name
+        </label>
+        <input asp-for="KindergartenName" class="form-control" />
+        <span asp-validation-for="KindergartenName"
+              class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="TeacherName" class="control-label">
+            Teacher name
+        </label>
+        <input asp-for="TeacherName" class="form-control" />
+        <span asp-validation-for="TeacherName"
+              class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        @(Model.Id == null ? "Create" : "Save")
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+</form>

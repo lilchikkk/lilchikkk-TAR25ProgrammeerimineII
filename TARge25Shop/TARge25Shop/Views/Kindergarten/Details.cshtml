@@ -1,0 +1,37 @@
+﻿@model TARge25Shop.Models.Kindergarten.KindergartenDetailsViewModel
+
+@{
+    ViewData["Title"] = "Kindergarten details";
+}
+
+<h1>Kindergarten details</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Group name</dt>
+    <dd class="col-sm-9">@Model.GroupName</dd>
+
+    <dt class="col-sm-3">Children count</dt>
+    <dd class="col-sm-9">@Model.ChildrenCount</dd>
+
+    <dt class="col-sm-3">Kindergarten name</dt>
+    <dd class="col-sm-9">@Model.KindergartenName</dd>
+
+    <dt class="col-sm-3">Teacher name</dt>
+    <dd class="col-sm-9">@Model.TeacherName</dd>
+
+    <dt class="col-sm-3">Created at</dt>
+    <dd class="col-sm-9">@Model.CreatedAt</dd>
+
+    <dt class="col-sm-3">Updated at</dt>
+    <dd class="col-sm-9">@Model.UpdatedAt</dd>
+</dl>
+
+<a asp-action="Edit"
+   asp-route-id="@Model.Id"
+   class="btn btn-warning">
+    Edit
+</a>
+
+<a asp-action="Index" class="btn btn-secondary">
+    Back
+</a>
