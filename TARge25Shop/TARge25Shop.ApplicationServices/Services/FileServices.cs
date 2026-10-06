@@ -28,38 +28,39 @@ namespace TARge25Shop.ApplicationServices.Services
         {
             if (dto.Files != null && dto.Files.Count > 0)
             {
+                //tuleb teha muutuja, kus on failide asukoht e kuhu hakatakse salvestama
+                string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
+
                 //kui Directoryt ei ole olemas, siis tee Directory
-                // \\wwwroot\\multipleFileUpload\\
-                //tuleb kasutada webHosti
-                if (!Directory.Exists(_webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\"))
-                {
-                    Directory.CreateDirectory(_webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\");
-                }
+                Directory.CreateDirectory(uploadsFolder);
 
                 foreach (var file in dto.Files)
                 {
-                    //tuleb teha muutuja, kus on failide asukoht e kuhu hakatakse salvestama
-                    string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                    if (file == null || file.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
                     //tuleb kaks ülevalpool olevat muutujat kombineerida üheks
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         file.CopyTo(fileStream);
-
-                        //tuleb Domaini teha class FileToApi, 
-                        //kus on muutujad Id, ExistingFilePath ja SpaceshipId
-                        FileToApi path = new FileToApi
-                        {
-                            Id = Guid.NewGuid(),
-                            ExistingFilePath = uniqueFileName,
-                            SpaceshipId = domain.Id
-                        };
-
-                        //tuleb lisada context construktorisse
-                        _context.FileToApis.AddAsync(path);
                     }
+
+                    //tuleb Domaini teha class FileToApi, 
+                    //kus on muutujad Id, ExistingFilePath ja SpaceshipId
+                    FileToApi path = new FileToApi
+                    {
+                        Id = Guid.NewGuid(),
+                        ExistingFilePath = uniqueFileName,
+                        SpaceshipId = domain.Id
+                    };
+
+                    //tuleb lisada context construktorisse
+                    _context.FileToApis.Add(path);
                 }
             }
         }
@@ -71,8 +72,7 @@ namespace TARge25Shop.ApplicationServices.Services
                 .FirstOrDefaultAsync(x => x.Id == dto.Id);
 
             //teha muutuja filePath, mis näitab failide asukohta
-            var filePath = _webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\"
-                + imageId.ExistingFilePath;
+            var filePath = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload", imageId.ExistingFilePath ?? string.Empty);
 
             //kui fail asub selles kaustas, siis kustuta
             if (File.Exists(filePath))
@@ -98,8 +98,7 @@ namespace TARge25Shop.ApplicationServices.Services
                     .FirstOrDefaultAsync(x => x.Id == dto.Id);
 
                 //teha muutuja filePath, mis näitab failide asukohta
-                var filePath = _webHost.ContentRootPath + "\\wwwroot\\multipleFileUpload\\"
-                    + imageId.ExistingFilePath;
+                var filePath = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload", imageId.ExistingFilePath ?? string.Empty);
 
                 //kui fail asub selles kaustas, siis kustuta
                 if (File.Exists(filePath))
