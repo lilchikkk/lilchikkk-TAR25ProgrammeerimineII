@@ -109,7 +109,6 @@ namespace TARge25Shop.ApplicationServices.Services
                 _context.FileToApis.Remove(imageId);
                 await _context.SaveChangesAsync();
             }
-
             return null;
         }
     }

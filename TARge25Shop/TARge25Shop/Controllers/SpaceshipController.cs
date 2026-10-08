@@ -166,7 +166,8 @@ namespace TARge25Shop.Controllers
                 .Select(y => new ImageViewModel
                 {
                     FilePath = y.ExistingFilePath,
-                    ImageId = y.Id
+                    ImageId = y.Id,
+                    SpaceshipId = y.SpaceshipId
                 }).ToArrayAsync();
 
             //see on vaheinstants domaini ja vm vahel
@@ -235,8 +236,7 @@ namespace TARge25Shop.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveImage(ImageViewModel vm)
         {
-            //tuleb [hendada dto ja vm
-            //ainult Id peab saama edastatud andmebaasi
+            //tuleb ühendada dto ja vm
             var dto = new FileToApiDto()
             {
                 Id = vm.ImageId
