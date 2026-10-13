@@ -1,16 +1,12 @@
 ﻿@model TARge25Shop.Models.RealEstate.RealEstateCreateUpdateViewModel
 
-@if (Model.Id.HasValue)
+@if (Model.Id.HasValue) // Muutmise vaade
 {
-    <h1>
-        Update
-    </h1>
+    <h1>Update</h1>
 }
-else
+else // Loomise vaade
 {
-    <h1>
-        Create
-    </h1>
+    <h1>Create</h1>
 }
 
 <form method="post" enctype="multipart/form-data">
@@ -49,15 +45,14 @@ else
     <hr />
     <br />
 
-    @if (Model.Id.HasValue)
+    @if (Model.Id.HasValue) // Uuendamise nupp
     {
         <input asp-action="update" asp-controller="realEstate" type="submit" class="btn btn-success" value="Update" />
     }
-    else
+    else // Loomise nupp
     {
         <input asp-action="create" asp-controller="realEstate" type="submit" class="btn btn-success" value="Create" />
     }
 
     <a asp-action="Index" asp-controller="realEstate" class="btn btn-secondary">Back to List</a>
 </form>
-

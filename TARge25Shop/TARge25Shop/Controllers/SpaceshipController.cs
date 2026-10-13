@@ -45,7 +45,7 @@ namespace TARge25Shop.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create() // Uue loomise vaate (GET) avamine
         {
             SpaceshipCreateUpdateViewModel result = new();
 
@@ -53,7 +53,7 @@ namespace TARge25Shop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(SpaceshipCreateUpdateViewModel vm)
+        public async Task<IActionResult> Create(SpaceshipCreateUpdateViewModel vm) // Uue andmete salvestamine (POST)
         {
             var dto = new SpaceshipDto
             {
@@ -78,16 +78,14 @@ namespace TARge25Shop.Controllers
 
             if (result == null)
             {
-                // Kui kosmoselaeva loomine ebaõnnestus, siis võime kuvada veateate
-                // ja jätta kasutaja samale lehele.
                 return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
         }
-
+    
         [HttpGet]
-        public async Task<IActionResult> Update(Guid id)
+        public async Task<IActionResult> Update(Guid id) // Olemasoleva muutmise vaate (GET) laadimine ID järgi
         {
             var spaceship = await _spaceshipServices.DetailAsync(id);
 
@@ -120,7 +118,7 @@ namespace TARge25Shop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(SpaceshipCreateUpdateViewModel vm)
+        public async Task<IActionResult> Update(SpaceshipCreateUpdateViewModel vm) // Muudetud andmete salvestamine (POST)
         {
             var dto = new SpaceshipDto()
             {
