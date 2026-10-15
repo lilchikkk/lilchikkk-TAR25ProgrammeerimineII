@@ -11,13 +11,16 @@ namespace TARge25Shop.Controllers
     {
         private readonly TARge25ShopContext _context;
         private readonly IKindergartenServices _kindergartenServices;
+        private readonly IFileServices _fileServices;
 
         public KindergartenController(
             TARge25ShopContext context,
-            IKindergartenServices kindergartenServices)
+            IKindergartenServices kindergartenServices,
+            IFileServices fileServices)
         {
             _context = context;
             _kindergartenServices = kindergartenServices;
+            _fileServices = fileServices;
         }
 
         [HttpGet]
@@ -51,6 +54,11 @@ namespace TARge25Shop.Controllers
         {
             if (!ModelState.IsValid)
             {
+                if (viewModel.Id.HasValue)
+                {
+                    viewModel.Image = await GetImagesAsync(viewModel.Id.Value);
+                }
+
                 return View(viewModel);
             }
 
@@ -62,7 +70,9 @@ namespace TARge25Shop.Controllers
                 KindergartenName = viewModel.KindergartenName,
                 TeacherName = viewModel.TeacherName,
                 CreatedAt = viewModel.CreatedAt,
-                UpdatedAt = viewModel.UpdatedAt
+                UpdatedAt = viewModel.UpdatedAt,
+                //failide edasiandmine dto-le
+                Files = viewModel.Files
             };
 
             if (viewModel.Id == null)
@@ -91,7 +101,8 @@ namespace TARge25Shop.Controllers
                 KindergartenName = kindergarten.KindergartenName,
                 TeacherName = kindergarten.TeacherName,
                 CreatedAt = kindergarten.CreatedAt,
-                UpdatedAt = kindergarten.UpdatedAt
+                UpdatedAt = kindergarten.UpdatedAt,
+                Image = await GetImagesAsync(id)
             };
 
             return View("CreateUpdate", viewModel);
@@ -111,7 +122,8 @@ namespace TARge25Shop.Controllers
                 KindergartenName = kindergarten.KindergartenName,
                 TeacherName = kindergarten.TeacherName,
                 CreatedAt = kindergarten.CreatedAt,
-                UpdatedAt = kindergarten.UpdatedAt
+                UpdatedAt = kindergarten.UpdatedAt,
+                Image = await GetImagesAsync(id)
             };
 
             return View(viewModel);
@@ -131,7 +143,8 @@ namespace TARge25Shop.Controllers
                 KindergartenName = kindergarten.KindergartenName,
                 TeacherName = kindergarten.TeacherName,
                 CreatedAt = kindergarten.CreatedAt,
-                UpdatedAt = kindergarten.UpdatedAt
+                UpdatedAt = kindergarten.UpdatedAt,
+                Image = await GetImagesAsync(id)
             };
 
             return View(viewModel);
@@ -140,9 +153,39 @@ namespace TARge25Shop.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmation(Guid id)
         {
+            //Delete kustutab ka kõik pildid (fail + andmebaasi kirje)
             await _kindergartenServices.Delete(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        //ühe pildi kustutamine ükshaaval
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(Guid imageId, Guid kindergartenId)
+        {
+            var exists = await _context.FileToApis
+                .AnyAsync(x => x.Id == imageId);
+
+            if (exists)
+            {
+                await _fileServices.RemoveImageFromApi(
+                    new FileToApiDto { Id = imageId });
+            }
+
+            //pärast kustutamist tagasi muutmise lehele
+            return RedirectToAction(nameof(Edit), new { id = kindergartenId });
+        }
+
+        private async Task<List<KindergartenImageViewModel>> GetImagesAsync(Guid id)
+        {
+            return await _context.FileToApis
+                .Where(x => x.KindergartenId == id)
+                .Select(y => new KindergartenImageViewModel
+                {
+                    FilePath = y.ExistingFilePath,
+                    ImageId = y.Id,
+                    KindergartenId = y.KindergartenId
+                }).ToListAsync();
         }
     }
 }
