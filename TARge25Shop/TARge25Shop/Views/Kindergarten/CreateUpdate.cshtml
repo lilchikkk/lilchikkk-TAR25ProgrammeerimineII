@@ -8,7 +8,7 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-action="CreateUpdate" method="post">
+<form asp-action="CreateUpdate" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <input asp-for="Id" type="hidden" />
@@ -52,6 +52,28 @@
         <span asp-validation-for="TeacherName"
               class="text-danger"></span>
     </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Files" class="control-label">
+            Pictures
+        </label>
+        <input asp-for="Files" class="form-control" multiple type="file" accept="image/*" />
+    </div>
+
+    @foreach (var image in Model.Image)
+    {
+        <div class="mb-3">
+            <partial name="_Images" model="image" />
+            <button type="submit"
+                    class="btn btn-danger btn-sm"
+                    formnovalidate
+                    formaction="@Url.Action("RemoveImage", "Kindergarten", new { imageId = image.ImageId, kindergartenId = Model.Id })">
+                Remove image
+            </button>
+        </div>
+    }
+
+    <hr />
 
     <button type="submit" class="btn btn-success">
         @(Model.Id == null ? "Create" : "Save")

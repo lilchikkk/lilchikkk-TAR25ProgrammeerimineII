@@ -9,10 +9,14 @@ namespace TARge25Shop.ApplicationServices.Services
     public class KindergartenServices : IKindergartenServices
     {
         private readonly TARge25ShopContext _context;
+        private readonly IFileServices _fileServices;
 
-        public KindergartenServices(TARge25ShopContext context)
+        public KindergartenServices(
+            TARge25ShopContext context,
+            IFileServices fileServices)
         {
             _context = context;
+            _fileServices = fileServices;
         }
 
         public async Task<Kindergarten> Create(KindergartenDto dto)
@@ -27,6 +31,9 @@ namespace TARge25Shop.ApplicationServices.Services
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
+
+            //piltide salvestamine uue ankeedi juurde
+            _fileServices.FilesToApi(dto, kindergarten);
 
             await _context.Kindergartens.AddAsync(kindergarten);
             await _context.SaveChangesAsync();
@@ -62,6 +69,9 @@ namespace TARge25Shop.ApplicationServices.Services
             kindergarten.TeacherName = dto.TeacherName;
             kindergarten.UpdatedAt = DateTime.Now;
 
+            //uute piltide lisamine muutmise ajal
+            _fileServices.FilesToApi(dto, kindergarten);
+
             await _context.SaveChangesAsync();
 
             return kindergarten;
@@ -70,6 +80,19 @@ namespace TARge25Shop.ApplicationServices.Services
         public async Task<Kindergarten> Delete(Guid id)
         {
             var kindergarten = await DetailAsync(id);
+
+            //leiame kõik selle lasteaia pildid
+            var images = await _context.FileToApis
+                .Where(x => x.KindergartenId == id)
+                .Select(y => new FileToApiDto
+                {
+                    Id = y.Id,
+                    KindergartenId = y.KindergartenId,
+                    ExistingFilePath = y.ExistingFilePath
+                }).ToArrayAsync();
+
+            //kustutame pildid kettalt ja andmebaasist
+            await _fileServices.RemoveImagesFromApi(images);
 
             _context.Kindergartens.Remove(kindergarten);
             await _context.SaveChangesAsync();

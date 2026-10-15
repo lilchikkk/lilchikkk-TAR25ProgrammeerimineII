@@ -28,6 +28,11 @@
     <dd class="col-sm-9">@Model.UpdatedAt</dd>
 </dl>
 
+@foreach (var image in Model.Image)
+{
+    <partial name="_Images" model="image" />
+}
+
 <form asp-action="DeleteConfirmation" method="post">
     <input asp-for="Id" type="hidden" />
 

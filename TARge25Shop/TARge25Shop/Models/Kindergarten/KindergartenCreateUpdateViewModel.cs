@@ -12,6 +12,11 @@
 
         public string TeacherName { get; set; } = string.Empty;
 
+        public List<IFormFile>? Files { get; set; }
+
+        public List<KindergartenImageViewModel> Image { get; set; }
+            = new List<KindergartenImageViewModel>();
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }

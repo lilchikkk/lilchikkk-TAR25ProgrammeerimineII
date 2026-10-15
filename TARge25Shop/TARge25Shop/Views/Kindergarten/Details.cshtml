@@ -26,6 +26,11 @@
     <dd class="col-sm-9">@Model.UpdatedAt</dd>
 </dl>
 
+@foreach (var image in Model.Image)
+{
+    <partial name="_Images" model="image" />
+}
+
 <a asp-action="Edit"
    asp-route-id="@Model.Id"
    class="btn btn-warning">
