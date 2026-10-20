@@ -1,0 +1,93 @@
+﻿@model List<TARge25Shop.Models.Library.BookIndexViewModel>
+@{
+    ViewData["Title"] = "Library";
+    var readers = (List<TARge25Shop.Models.Library.ReaderIndexViewModel>)ViewBag.Readers;
+}
+
+<h1>Library</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<h4>Add book</h4>
+<form asp-action="Create" method="post" class="mb-3">
+    <input name="Title" placeholder="Title" required />
+    <input name="Author" placeholder="Author" required />
+    <input name="PublishedYear" type="number" placeholder="Year" required />
+    <button class="btn btn-primary btn-sm">Add</button>
+</form>
+
+<h4>Search</h4>
+<form asp-action="ByYear" method="get" class="mb-1">
+    <input name="year" type="number" placeholder="Year" required />
+    <button class="btn btn-secondary btn-sm">By year</button>
+</form>
+<form asp-action="ByTitle" method="get" class="mb-2">
+    <input name="title" placeholder="Title" required />
+    <button class="btn btn-secondary btn-sm">By title</button>
+</form>
+
+<p>
+    <a asp-action="Index" class="btn btn-outline-dark btn-sm">All</a>
+    <a asp-action="Borrowed" class="btn btn-outline-dark btn-sm">Borrowed</a>
+    <a asp-action="Readers" class="btn btn-outline-dark btn-sm">Readers</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Available</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>
+                    <form asp-action="UpdateTitle" method="post">
+                        <input type="hidden" name="id" value="@book.Id" />
+                        <input name="title" value="@book.Title" />
+                        <button class="btn btn-warning btn-sm">Edit</button>
+                    </form>
+                </td>
+                <td>@book.Author</td>
+                <td>@book.PublishedYear</td>
+                <td>@book.IsAvailable</td>
+                <td>
+                    @if (book.IsAvailable)
+                    {
+                        <form asp-action="Borrow" method="post" class="d-inline">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <select name="readerId" required>
+                                <option value="">Reader...</option>
+                                @foreach (var r in readers)
+                                {
+                                    <option value="@r.Id">@r.FullName</option>
+                                }
+                            </select>
+                            <button class="btn btn-success btn-sm">Borrow</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="Return" method="post" class="d-inline">
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button class="btn btn-info btn-sm">Return</button>
+                        </form>
+                    }
+
+                    <form asp-action="Delete" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@book.Id" />
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

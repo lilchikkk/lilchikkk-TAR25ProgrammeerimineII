@@ -1,0 +1,28 @@
+﻿@model List<TARge25Shop.Models.Library.LoanIndexViewModel>
+@{
+    ViewData["Title"] = "Loans";
+}
+
+<h1>Reader loans</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Loan date</th>
+            <th>Return date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var loan in Model)
+        {
+            <tr>
+                <td>@loan.BookTitle</td>
+                <td>@loan.LoanDate</td>
+                <td>@loan.ReturnDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Readers">Back to readers</a>

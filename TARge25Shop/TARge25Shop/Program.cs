@@ -17,6 +17,9 @@ namespace TARge25Shop
             builder.Services.AddScoped<IFileServices, FileServices>();
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             builder.Services.AddScoped<IKindergartenServices, KindergartenServices>();
+            builder.Services.AddScoped<IBookServices, BookServices>();
+            builder.Services.AddScoped<ILoanServices, LoanServices>();
+            builder.Services.AddScoped<IReaderServices, ReaderServices>();
 
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlServer(

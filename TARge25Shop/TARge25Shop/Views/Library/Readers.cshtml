@@ -1,0 +1,36 @@
+﻿@model List<TARge25Shop.Models.Library.ReaderIndexViewModel>
+@{
+    ViewData["Title"] = "Readers";
+}
+
+<h1>Readers</h1>
+
+<form asp-action="CreateReader" method="post" class="mb-3">
+    <input name="FullName" placeholder="Full name" required />
+    <input name="Email" type="email" placeholder="Email" required />
+    <button class="btn btn-primary btn-sm">Add</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reader in Model)
+        {
+            <tr>
+                <td>@reader.FullName</td>
+                <td>@reader.Email</td>
+                <td>
+                    <a asp-action="Loans" asp-route-readerId="@reader.Id" class="btn btn-info btn-sm">Loans</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index">Back to books</a>

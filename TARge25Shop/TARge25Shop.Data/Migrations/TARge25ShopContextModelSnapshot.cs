@@ -17,10 +17,35 @@ namespace TARge25Shop.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("TARge25Shop.Core.Domain.Book", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PublishedYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Books");
+                });
 
             modelBuilder.Entity("TARge25Shop.Core.Domain.FileToApi", b =>
                 {
@@ -69,6 +94,52 @@ namespace TARge25Shop.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Kindergartens");
+                });
+
+            modelBuilder.Entity("TARge25Shop.Core.Domain.Loan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LoanDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ReaderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("ReaderId");
+
+                    b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("TARge25Shop.Core.Domain.Reader", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Readers");
                 });
 
             modelBuilder.Entity("TARge25Shop.Core.Domain.RealEstate", b =>
@@ -131,6 +202,35 @@ namespace TARge25Shop.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Spaceships");
+                });
+
+            modelBuilder.Entity("TARge25Shop.Core.Domain.Loan", b =>
+                {
+                    b.HasOne("TARge25Shop.Core.Domain.Book", "Book")
+                        .WithMany("Loans")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TARge25Shop.Core.Domain.Reader", "Reader")
+                        .WithMany("Loans")
+                        .HasForeignKey("ReaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Reader");
+                });
+
+            modelBuilder.Entity("TARge25Shop.Core.Domain.Book", b =>
+                {
+                    b.Navigation("Loans");
+                });
+
+            modelBuilder.Entity("TARge25Shop.Core.Domain.Reader", b =>
+                {
+                    b.Navigation("Loans");
                 });
 #pragma warning restore 612, 618
         }
