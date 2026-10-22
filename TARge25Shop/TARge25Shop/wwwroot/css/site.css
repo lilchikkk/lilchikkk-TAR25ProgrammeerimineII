@@ -1,31 +1,104 @@
 html {
-  font-size: 14px;
+    font-size: 15px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: #f4f6f9;
+    margin-bottom: 60px;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    line-height: 60px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+
+.box {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+}
+
+.table th {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+
+.space {
+    background-color: #0f1226;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px), linear-gradient(160deg, #0f1226, #1d2250);
+    background-size: 60px 60px, 100% 100%;
+    color: #fff;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+    .space h1, .space h4 {
+        color: #fff;
+    }
+
+    .space .box {
+        background-color: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: none;
+        color: #fff;
+    }
+
+    .space .table {
+        --bs-table-bg: transparent;
+        --bs-table-color: #fff;
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.08);
+        --bs-table-hover-color: #fff;
+        --bs-table-border-color: rgba(255, 255, 255, 0.15);
+    }
+
+        .space .table th, .space dt, .space .form-label {
+            color: #aab3ff;
+        }
+
+    .space .form-control, .space .form-select {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+
+        .space .form-control::placeholder {
+            color: #aab3ff;
+        }
+
+        .space .form-control:focus, .space .form-select:focus {
+            background-color: rgba(255, 255, 255, 0.12);
+            border-color: #8c96ff;
+            color: #fff;
+            box-shadow: 0 0 0 0.2rem rgba(140, 150, 255, 0.25);
+        }
+
+        .space .form-select option {
+            color: #000;
+        }
+
+    .space .btn-primary {
+        background-color: #5b6cff;
+        border-color: #5b6cff;
+    }
+
+.ship-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
 }
