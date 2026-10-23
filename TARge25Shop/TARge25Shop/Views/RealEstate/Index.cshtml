@@ -1,46 +1,56 @@
 ﻿@model IEnumerable<TARge25Shop.Models.RealEstate.RealEstateIndexViewModel>
 
-<div>
-    <a asp-action="create" asp-controller="realEstate" type="submit" class="btn btn-primary">Create</a>
-</div>
-
 @{
-    short rowNumber = 1;
+    ViewData["Title"] = "Real estate";
 }
 
+<div class="theme-blue">
+    <div class="page-header">
+        <div>
+            <h1>🏠 Real estate</h1>
+            <p class="text-muted mb-0">Total objects: <strong>@Model.Count()</strong></p>
+        </div>
+        <a asp-action="create" asp-controller="realEstate" class="btn btn-primary">+ Create new</a>
+    </div>
 
-<div class="h1">
-    RealEstate
-</div>
-<form method="get">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Nr</th>
-                <th scope="col">Area</th>
-                <th scope="col">Location</th>
-                <th scope="col">Room Nr</th>
-                <th scope="col">Building Type</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
+    <input type="text" id="searchInput" class="form-control search-box"
+           placeholder="🔍 Search by location or building type..." />
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-emoji">🏘️</div>
+            <h3>No real estate yet</h3>
+            <p>Click “Create new” to add the first one.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
             @foreach (var realEstate in Model)
             {
-                <tr>
-                    <td>@rowNumber</td>
-                    <td>@realEstate.Area</td>
-                    <td>@realEstate.Location</td>
-                    <td>@realEstate.RoomNumber</td>
-                    <td>@realEstate.BuildingType</td>
-                    <td>
-                        <a asp-action="details" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-primary">Details</a>
-                        <a asp-action="update" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-primary">Update</a>
-                        <a asp-action="delete" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-outline-danger">Delete</a>
-                    </td>
-                </tr>
-                rowNumber += 1;
+                <div class="col-sm-6 col-lg-4 kg-item">
+                    <div class="kg-card">
+                        <div class="kg-top">
+                            <span class="kg-avatar">🏠</span>
+                            <strong>🛏 @realEstate.RoomNumber rooms</strong>
+                        </div>
+                        <div class="kg-body">
+                            <h3 class="kg-title">📍 @realEstate.Location</h3>
+                            <p class="kg-line">📐 @realEstate.Area m²</p>
+                            <p class="kg-line">🏢 @realEstate.BuildingType</p>
+                            <p class="kg-date">Added: @(realEstate.CreatedAt?.ToString("dd.MM.yyyy") ?? "-")</p>
+                        </div>
+                        <div class="kg-actions">
+                            <a asp-action="details" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-info btn-sm">Details</a>
+                            <a asp-action="update" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-warning btn-sm">Update</a>
+                            <a asp-action="delete" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-</form>
+        </div>
+
+        <p id="noResults" class="text-center text-muted mt-4" style="display:none;">Nothing found 😕</p>
+    }
+</div>
