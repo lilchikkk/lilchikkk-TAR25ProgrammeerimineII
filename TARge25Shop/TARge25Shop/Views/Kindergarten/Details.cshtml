@@ -4,39 +4,33 @@
     ViewData["Title"] = "Kindergarten details";
 }
 
-<h1>Kindergarten details</h1>
+<div class="page-header">
+    <h1>🧸 @Model.GroupName</h1>
+</div>
 
-<dl class="row">
-    <dt class="col-sm-3">Group name</dt>
-    <dd class="col-sm-9">@Model.GroupName</dd>
+<div class="panel">
+    <div class="info-grid">
+        <div class="info-item"><span>Group name</span><strong>@Model.GroupName</strong></div>
+        <div class="info-item"><span>Children count</span><strong>👶 @Model.ChildrenCount</strong></div>
+        <div class="info-item"><span>Kindergarten name</span><strong>🏫 @Model.KindergartenName</strong></div>
+        <div class="info-item"><span>Teacher name</span><strong>👩‍🏫 @Model.TeacherName</strong></div>
+        <div class="info-item"><span>Created at</span><strong>@Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</strong></div>
+        <div class="info-item"><span>Updated at</span><strong>@Model.UpdatedAt.ToString("dd.MM.yyyy HH:mm")</strong></div>
+    </div>
 
-    <dt class="col-sm-3">Children count</dt>
-    <dd class="col-sm-9">@Model.ChildrenCount</dd>
+    @if (Model.Image.Any())
+    {
+        <h4 class="mt-4">Photos</h4>
+        <div class="gallery">
+            @foreach (var image in Model.Image)
+            {
+                <partial name="_Images" model="image" />
+            }
+        </div>
+    }
 
-    <dt class="col-sm-3">Kindergarten name</dt>
-    <dd class="col-sm-9">@Model.KindergartenName</dd>
-
-    <dt class="col-sm-3">Teacher name</dt>
-    <dd class="col-sm-9">@Model.TeacherName</dd>
-
-    <dt class="col-sm-3">Created at</dt>
-    <dd class="col-sm-9">@Model.CreatedAt</dd>
-
-    <dt class="col-sm-3">Updated at</dt>
-    <dd class="col-sm-9">@Model.UpdatedAt</dd>
-</dl>
-
-@foreach (var image in Model.Image)
-{
-    <partial name="_Images" model="image" />
-}
-
-<a asp-action="Edit"
-   asp-route-id="@Model.Id"
-   class="btn btn-warning">
-    Edit
-</a>
-
-<a asp-action="Index" class="btn btn-secondary">
-    Back
-</a>
+    <div class="mt-4 d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+</div>

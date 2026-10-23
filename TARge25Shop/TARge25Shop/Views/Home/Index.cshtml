@@ -1,8 +1,45 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero">
+    <span class="floaty f1">🧸</span>
+    <span class="floaty f2">⭐</span>
+    <span class="floaty f3">🎈</span>
+    <span class="floaty f4">🚀</span>
+
+    <p class="hero-tag">Welcome to</p>
+    <h1 class="hero-title">TARge25Shop</h1>
+    <p class="hero-text">
+        A small web app where you can manage kindergartens, spaceships and real estate.
+        Pick a section below and start exploring!
+    </p>
+    <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <a asp-controller="Kindergarten" asp-action="Index" class="btn btn-light btn-lg">Open kindergartens</a>
+        <a asp-controller="Kindergarten" asp-action="CreateUpdate" class="btn btn-light btn-lg">+ Add new</a>
+    </div>
+</section>
+
+<section class="row g-4 mt-2">
+    <div class="col-md-4">
+        <a asp-controller="Kindergarten" asp-action="Index" class="feature-card">
+            <span class="feature-icon">🧸</span>
+            <h3>Kindergarten</h3>
+            <p>Groups, teachers, children and photos.</p>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="Spaceship" asp-action="Index" class="feature-card">
+            <span class="feature-icon">🚀</span>
+            <h3>Spaceship</h3>
+            <p>Browse and manage your fleet of ships.</p>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="RealEstate" asp-action="Index" class="feature-card">
+            <span class="feature-icon">🏠</span>
+            <h3>Real estate</h3>
+            <p>Houses, flats and everything in between.</p>
+        </a>
+    </div>
+</section>

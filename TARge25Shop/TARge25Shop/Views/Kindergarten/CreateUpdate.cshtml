@@ -6,80 +6,76 @@
         : "Edit kindergarten";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="page-header">
+    <h1>@(Model.Id == null ? "✨ Create kindergarten" : "✏️ Edit kindergarten")</h1>
+</div>
 
-<form asp-action="CreateUpdate" method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="panel narrow">
+    <form asp-action="CreateUpdate" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <input asp-for="Id" type="hidden" />
-    <input asp-for="CreatedAt" type="hidden" />
-    <input asp-for="UpdatedAt" type="hidden" />
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="CreatedAt" type="hidden" />
+        <input asp-for="UpdatedAt" type="hidden" />
 
-    <div class="form-group mb-3">
-        <label asp-for="GroupName" class="control-label">
-            Group name
-        </label>
-        <input asp-for="GroupName" class="form-control" />
-        <span asp-validation-for="GroupName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="ChildrenCount" class="control-label">
-            Children count
-        </label>
-        <input asp-for="ChildrenCount"
-               class="form-control"
-               type="number"
-               min="0" />
-        <span asp-validation-for="ChildrenCount"
-              class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="KindergartenName" class="control-label">
-            Kindergarten name
-        </label>
-        <input asp-for="KindergartenName" class="form-control" />
-        <span asp-validation-for="KindergartenName"
-              class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="TeacherName" class="control-label">
-            Teacher name
-        </label>
-        <input asp-for="TeacherName" class="form-control" />
-        <span asp-validation-for="TeacherName"
-              class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="Files" class="control-label">
-            Pictures
-        </label>
-        <input asp-for="Files" class="form-control" multiple type="file" accept="image/*" />
-    </div>
-
-    @foreach (var image in Model.Image)
-    {
         <div class="mb-3">
-            <partial name="_Images" model="image" />
-            <button type="submit"
-                    class="btn btn-danger btn-sm"
-                    formnovalidate
-                    formaction="@Url.Action("RemoveImage", "Kindergarten", new { imageId = image.ImageId, kindergartenId = Model.Id })">
-                Remove image
-            </button>
+            <label asp-for="GroupName" class="form-label">Group name</label>
+            <input asp-for="GroupName" class="form-control" placeholder="e.g. Sunflowers" />
+            <span asp-validation-for="GroupName" class="text-danger"></span>
         </div>
-    }
 
-    <hr />
+        <div class="mb-3">
+            <label asp-for="ChildrenCount" class="form-label">Children count</label>
+            <input asp-for="ChildrenCount" class="form-control" type="number" min="0" />
+            <span asp-validation-for="ChildrenCount" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-success">
-        @(Model.Id == null ? "Create" : "Save")
-    </button>
+        <div class="mb-3">
+            <label asp-for="KindergartenName" class="form-label">Kindergarten name</label>
+            <input asp-for="KindergartenName" class="form-control" />
+            <span asp-validation-for="KindergartenName" class="text-danger"></span>
+        </div>
 
-    <a asp-action="Index" class="btn btn-secondary">
-        Back
-    </a>
-</form>
+        <div class="mb-3">
+            <label asp-for="TeacherName" class="form-label">Teacher name</label>
+            <input asp-for="TeacherName" class="form-control" />
+            <span asp-validation-for="TeacherName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Files" class="form-label">Pictures</label>
+            <input asp-for="Files" id="fileInput" class="form-control" multiple type="file" accept="image/*" />
+            <div id="previewBox" class="gallery mt-2"></div>
+        </div>
+
+        @if (Model.Image.Any())
+        {
+            <h6 class="mt-4">Current photos</h6>
+            <div class="gallery">
+                @foreach (var image in Model.Image)
+                {
+                    <div class="gallery-item">
+                        <partial name="_Images" model="image" />
+                        <button type="submit"
+                                class="btn btn-danger btn-sm"
+                                formnovalidate
+                                formaction="@Url.Action("RemoveImage", "Kindergarten", new { imageId = image.ImageId, kindergartenId = Model.Id })">
+                            Remove
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+
+        <hr />
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">@(Model.Id == null ? "Create" : "Save")</button>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
