@@ -3,26 +3,49 @@
     ViewData["Title"] = "Loans";
 }
 
-<h1>Reader loans</h1>
+<div class="page-header">
+    <h1>📋 Reader loans</h1>
+    <a asp-action="Readers" class="btn btn-secondary btn-sm">← Back to readers</a>
+</div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Book</th>
-            <th>Loan date</th>
-            <th>Return date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var loan in Model)
-        {
-            <tr>
-                <td>@loan.BookTitle</td>
-                <td>@loan.LoanDate</td>
-                <td>@loan.ReturnDate</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<a asp-action="Readers">Back to readers</a>
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-emoji">📭</div>
+        <h3>No loans yet</h3>
+        <p>This reader has not borrowed any books.</p>
+    </div>
+}
+else
+{
+    <div class="panel table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Loan date</th>
+                    <th>Return date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loan in Model)
+                {
+                    <tr>
+                        <td>📖 @loan.BookTitle</td>
+                        <td>@loan.LoanDate.ToString("dd.MM.yyyy")</td>
+                        <td>
+                            @if (loan.ReturnDate.HasValue)
+                            {
+                                <span class="status status-ok">@loan.ReturnDate.Value.ToString("dd.MM.yyyy")</span>
+                            }
+                            else
+                            {
+                                <span class="status status-out">Not returned yet</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
