@@ -1,133 +1,40 @@
-﻿@model List<TARge25Shop.Models.Library.BookIndexViewModel>
-@{
+﻿@{
     ViewData["Title"] = "Library";
-    var readers = (List<TARge25Shop.Models.Library.ReaderIndexViewModel>)ViewBag.Readers;
 }
 
-<div class="page-header">
-    <div>
-        <h1>📚 Library</h1>
-        <p class="text-muted mb-0">
-            Books shown: <strong>@Model.Count</strong>
-            &middot; Borrowed: <strong>@Model.Count(b => !b.IsAvailable)</strong>
-        </p>
-    </div>
-    <div class="d-flex gap-2">
-        <a asp-action="Index" class="btn btn-secondary btn-sm">All</a>
-        <a asp-action="Borrowed" class="btn btn-secondary btn-sm">Borrowed</a>
-        <a asp-action="Readers" class="btn btn-secondary btn-sm">Readers</a>
-    </div>
-</div>
+<div style="background-color: #0d131a; color: white; display: flex; padding: 20px;">
+    <div style="flex: 1;">
+        <span style="color: gray; font-size: 10px;">CULTURE MAR 20</span>
+        <h1 style="font-family: serif; font-size: 40px;">The Saddest Book</h1>
+        <p style="color: #ccc;">Library</p>
+        
+        <hr style="border-color: #333;">
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
+        <div style="margin-top: 20px;">
+            <p style="color: gray; font-size: 10px;">CULTURE APR 02</p>
+            <h3>Unfair trade</h3>
+        </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-lg-6">
-        <div class="panel h-100">
-            <h5>➕ Add book</h5>
-            <form asp-action="Create" method="post" class="row g-2">
-                <div class="col-12">
-                    <input name="Title" class="form-control" placeholder="Title" required />
-                </div>
-                <div class="col-sm-7">
-                    <input name="Author" class="form-control" placeholder="Author" required />
-                </div>
-                <div class="col-sm-5">
-                    <input name="PublishedYear" type="number" class="form-control" placeholder="Year" required />
-                </div>
-                <div class="col-12">
-                    <button class="btn btn-primary">Add</button>
-                </div>
-            </form>
+        <div style="margin-top: 20px;">
+            <p style="color: gray; font-size: 10px;">POWER APR 02</p>
+            <h3>An open letter to a dog, who won't come out from under the couch</h3>
         </div>
     </div>
 
-    <div class="col-lg-6">
-        <div class="panel h-100">
-            <h5>🔍 Search</h5>
-            <form asp-action="ByYear" method="get" class="input-group mb-2">
-                <input name="year" type="number" class="form-control" placeholder="Year" required />
-                <button class="btn btn-secondary">By year</button>
-            </form>
-            <form asp-action="ByTitle" method="get" class="input-group">
-                <input name="title" class="form-control" placeholder="Title" required />
-                <button class="btn btn-secondary">By title</button>
-            </form>
+    <div style="width: 350px; background-color: #ff2a55; padding: 30px; text-align: center;">
+        <span style="float: right; font-size: 24px; cursor: pointer;">×</span>
+        
+        <h2 style="font-family: serif; font-size: 30px; color: black; margin-top: 20px;">The Outline</h2>
+
+        <div style="margin: 30px 0; display: flex; flex-direction: column; gap: 10px;">
+            <div style="background-color: black; color: #ff2a55; padding: 15px; font-size: 24px; font-weight: bold;">RECENT</div>
+            <div style="background-color: black; color: #ff2a55; padding: 15px; font-size: 24px; font-weight: bold;">POWER</div>
+            <div style="background-color: white; color: #ff2a55; padding: 15px; font-size: 24px; font-weight: bold;">CULTURE</div>
+            <div style="background-color: black; color: #ff2a55; padding: 15px; font-size: 24px; font-weight: bold;">FUTURE</div>
+        </div>
+
+        <div style="font-size: 10px; color: black; font-weight: bold; margin-top: 50px;">
+            ABOUT &nbsp; LEGAL &nbsp; JOBS &nbsp; GOT A TIP?
         </div>
     </div>
 </div>
-
-@if (!Model.Any())
-{
-    <div class="empty-state">
-        <div class="empty-emoji">📖</div>
-        <h3>No books found</h3>
-        <p>Add the first book using the form above.</p>
-    </div>
-}
-else
-{
-    <div class="row g-4">
-        @foreach (var book in Model)
-        {
-            <div class="col-md-6 col-lg-4">
-                <div class="kg-card">
-                    <div class="kg-top">
-                        <span class="kg-avatar">📖</span>
-                        @if (book.IsAvailable)
-                        {
-                            <span class="status status-ok">Available</span>
-                        }
-                        else
-                        {
-                            <span class="status status-out">Borrowed</span>
-                        }
-                    </div>
-
-                    <div class="kg-body">
-                        @* Название можно сразу изменить и нажать Edit *@
-                        <form asp-action="UpdateTitle" method="post" class="input-group input-group-sm mb-2">
-                            <input type="hidden" name="id" value="@book.Id" />
-                            <input name="title" value="@book.Title" class="form-control" />
-                            <button class="btn btn-warning">Edit</button>
-                        </form>
-                        <p class="kg-line">✍️ @book.Author</p>
-                        <p class="kg-date">Published: @book.PublishedYear</p>
-                    </div>
-
-                    <div class="kg-actions">
-                        @if (book.IsAvailable)
-                        {
-                            <form asp-action="Borrow" method="post" class="input-group input-group-sm">
-                                <input type="hidden" name="bookId" value="@book.Id" />
-                                <select name="readerId" class="form-select" required>
-                                    <option value="">Reader...</option>
-                                    @foreach (var r in readers)
-                                    {
-                                        <option value="@r.Id">@r.FullName</option>
-                                    }
-                                </select>
-                                <button class="btn btn-success">Borrow</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <form asp-action="Return" method="post">
-                                <input type="hidden" name="bookId" value="@book.Id" />
-                                <button class="btn btn-info btn-sm">Return</button>
-                            </form>
-                        }
-
-                        <form asp-action="Delete" method="post" onsubmit="return confirm('Delete this book?');">
-                            <input type="hidden" name="id" value="@book.Id" />
-                            <button class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-}
