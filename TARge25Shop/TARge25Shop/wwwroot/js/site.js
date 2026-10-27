@@ -10,7 +10,6 @@
         }
     });
 
-
     var searchInput = document.getElementById("searchInput");
     if (searchInput) {
         searchInput.addEventListener("input", function () {
@@ -45,7 +44,6 @@
         });
     }
 
-
     document.addEventListener("click", function (e) {
         if (e.target.classList.contains("gallery-img")) {
             var box = document.createElement("div");
@@ -54,5 +52,45 @@
             box.addEventListener("click", function () { box.remove(); });
             document.body.appendChild(box);
         }
+    });
+
+    var bookSearch = document.getElementById("bookSearch");
+    if (bookSearch) {
+        bookSearch.addEventListener("input", function () {
+            var text = bookSearch.value.toLowerCase();
+
+            document.querySelectorAll("tbody tr").forEach(function (row) {
+                if (row.innerText.toLowerCase().includes(text)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    }
+});
+
+
+document.addEventListener("click", function (e) {
+    var bubble = document.createElement("div");
+    bubble.className = "pop-bubble";
+    bubble.style.left = e.clientX + "px";
+    bubble.style.top = e.clientY + "px";
+    document.body.appendChild(bubble);
+
+    setTimeout(function () {
+        bubble.remove();
+    }, 1500);
+});
+
+
+document.addEventListener("mousemove", function (e) {
+    var blobs = document.querySelectorAll(".hero .blob");
+    var x = (e.clientX - window.innerWidth / 2) / 40;
+    var y = (e.clientY - window.innerHeight / 2) / 40;
+
+    blobs.forEach(function (blob, i) {
+        blob.style.marginLeft = x * (i + 1) + "px";
+        blob.style.marginTop = y * (i + 1) + "px";
     });
 });
