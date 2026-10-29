@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<NuGetAudit>false</NuGetAudit>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<NuGetAudit>false</NuGetAudit>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.14" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TARge25Shop.Core\TARge25Shop.Core.csproj" />
-    <ProjectReference Include="..\TARge25Shop.Data\TARge25Shop.Data.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\TARge25Shop.Core\TARge25Shop.Core.csproj" />
+		<ProjectReference Include="..\TARge25Shop.Data\TARge25Shop.Data.csproj" />
+	</ItemGroup>
 
 </Project>

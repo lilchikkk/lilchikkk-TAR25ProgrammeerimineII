@@ -4,59 +4,38 @@
 }
 
 <div class="page-header">
-    <h1>👥 Readers</h1>
-    <a asp-action="Index" class="btn btn-secondary btn-sm">← Back to books</a>
+    <div>
+        <h1>Readers</h1>
+        <p class="page-sub">@Model.Count in the library</p>
+    </div>
+    <a asp-action="Index" class="btn btn-light btn-sm">← Back to books</a>
 </div>
 
-<div class="panel mb-4">
-    <h5>➕ Add reader</h5>
-    <form asp-action="CreateReader" method="post" class="row g-2">
-        <div class="col-md-5">
-            <input name="FullName" class="form-control" placeholder="Full name" required />
-        </div>
-        <div class="col-md-5">
-            <input name="Email" type="email" class="form-control" placeholder="Email" required />
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100">Add</button>
-        </div>
-    </form>
-</div>
+<form asp-action="CreateReader" method="post" class="add-form">
+    <input name="FullName" class="form-control" placeholder="Full name" required />
+    <input name="Email" type="email" class="form-control" placeholder="Email" required />
+    <button class="btn btn-primary">Add reader</button>
+</form>
 
 @if (!Model.Any())
 {
-    <div class="empty-state">
-        <div class="empty-emoji">👤</div>
-        <h3>No readers yet</h3>
-        <p>Add the first reader using the form above.</p>
-    </div>
+    <p class="empty-text">No readers yet. Add the first one above.</p>
 }
 else
 {
-    <div class="panel table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var reader in Model)
-                {
-                    <tr>
-                        <td>
-                            <span class="avatar">@(reader.FullName.Length > 0 ? reader.FullName.Substring(0, 1).ToUpper() : "?")</span>
-                            @reader.FullName
-                        </td>
-                        <td>@reader.Email</td>
-                        <td class="text-end">
-                            <a asp-action="Loans" asp-route-readerId="@reader.Id" class="btn btn-info btn-sm">Loans</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <div class="reader-list">
+        @foreach (var reader in Model)
+        {
+            <div class="reader-row">
+                <span class="avatar">@(reader.FullName.Length > 0 ? reader.FullName.Substring(0, 1).ToUpper() : "?")</span>
+
+                <div class="reader-info">
+                    <b>@reader.FullName</b>
+                    <span>@reader.Email</span>
+                </div>
+
+                <a asp-action="Loans" asp-route-readerId="@reader.Id" class="btn btn-outline-primary btn-sm">Loans</a>
+            </div>
+        }
     </div>
 }
