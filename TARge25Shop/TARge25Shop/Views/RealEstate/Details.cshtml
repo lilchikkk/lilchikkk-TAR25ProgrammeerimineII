@@ -19,6 +19,20 @@
             <div class="info-item"><span>Modified at</span><strong>@(Model.ModifiedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</strong></div>
         </div>
 
+
+        @if (Model.Image != null && Model.Image.Any())
+        {
+            <div class="mt-4">
+                <h5>Images</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var img in Model.Image)
+                    {
+                        <img src="@img.Image" alt="@img.ImageTitle" style="max-width:200px" />
+                    }
+                </div>
+            </div>
+        }
+
         <div class="mt-4 d-flex gap-2">
             <a asp-action="update" asp-controller="realEstate" asp-route-id="@Model.Id" class="btn btn-warning">Update</a>
             <a asp-action="Index" asp-controller="realEstate" class="btn btn-secondary">Back</a>

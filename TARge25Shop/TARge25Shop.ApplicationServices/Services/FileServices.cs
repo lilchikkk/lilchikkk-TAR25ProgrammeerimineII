@@ -111,5 +111,33 @@ namespace TARge25Shop.ApplicationServices.Services
             }
             return null;
         }
+
+        public void UploadFilesToDatabase(RealEstateDto dto, RealEstate domain)
+        {
+            //toimub kontroll, kas vähemalt üks fail või mitu
+            if (dto.Files == null || dto.Files.Count == 0)
+                return;
+
+            foreach (var file in dto.Files)
+            {
+                if (file.Length == 0)
+                    continue;
+
+                using var memoryStream = new MemoryStream();
+                file.CopyTo(memoryStream);
+
+                var uploadedFile = new FileToDatabase
+                {
+                    Id = Guid.NewGuid(),
+                    ImageTitle = file.FileName,
+                    ImageData = memoryStream.ToArray(),
+                    RealEstateId = domain.Id
+                };
+
+                _context.FileToDatabases.Add(uploadedFile);
+
+            }
+        }
     }
 }
+

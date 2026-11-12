@@ -35,6 +35,12 @@
                 <input asp-for="BuildingType" class="form-control" />
             </div>
 
+            @* ДОБАВЛЕНО: выбор файлов *@
+            <div class="mb-3">
+                <label asp-for="Files" class="form-label">Images</label>
+                <input asp-for="Files" type="file" multiple class="form-control" />
+            </div>
+
             <hr />
 
             <div class="d-flex gap-2">
@@ -50,5 +56,23 @@
                 <a asp-action="Index" asp-controller="realEstate" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
+
+        @if (Model.Image != null && Model.Image.Any())
+        {
+            <hr />
+            <h5>Saved images</h5>
+            @foreach (var img in Model.Image)
+            {
+                <div class="mb-2">
+                    <img src="@img.Image" alt="@img.ImageTitle" style="max-width:200px" />
+
+                    <form asp-action="RemoveImage" asp-controller="realEstate" method="post" class="d-inline">
+                        <input type="hidden" name="imageId" value="@img.ImageId" />
+                        <input type="hidden" name="realEstateId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            }
+        }
     </div>
 </div>

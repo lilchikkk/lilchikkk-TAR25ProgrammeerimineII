@@ -30,6 +30,8 @@ namespace TARge25Shop.ApplicationServices.Services
             realEstate.CreatedAt = DateTime.Now;
             realEstate.ModifiedAt = DateTime.Now;
 
+            UploadFilesToDatabase(dto, realEstate);
+
             _context.RealEstates.Add(realEstate);
             await _context.SaveChangesAsync();
 
@@ -47,6 +49,8 @@ namespace TARge25Shop.ApplicationServices.Services
             realEstate.BuildingType = dto.BuildingType;
             realEstate.CreatedAt = dto.CreatedAt;
             realEstate.ModifiedAt = DateTime.Now;
+
+            UploadFilesToDatabase(dto, realEstate);
 
             _context.RealEstates.Update(realEstate);
             await _context.SaveChangesAsync();
@@ -67,10 +71,41 @@ namespace TARge25Shop.ApplicationServices.Services
             var realestate = await _context.RealEstates
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+            var images = await _context.FileToDatabases
+                .Where(x => x.RealEstateId == id)
+                .ToListAsync();
+
+            _context.FileToDatabases.RemoveRange(images);
             _context.RealEstates.Remove(realestate);
             await _context.SaveChangesAsync();
 
             return realestate;
+        }
+
+        public void UploadFilesToDatabase(RealEstateDto dto, RealEstate domain)
+        {
+            //toimub kontroll, kas vähemalt üks fail või mitu
+            if (dto.Files == null || dto.Files.Count == 0)
+                return;
+
+            foreach (var file in dto.Files)
+            {
+                if (file.Length == 0)
+                    continue;
+
+                using var memoryStream = new MemoryStream();
+                file.CopyTo(memoryStream);
+
+                var uploadedFile = new FileToDatabase
+                {
+                    Id = Guid.NewGuid(),
+                    ImageTitle = file.FileName,
+                    ImageData = memoryStream.ToArray(),
+                    RealEstateId = domain.Id
+                };
+
+                _context.FileToDatabases.Add(uploadedFile);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; 
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Core.ServiceInterface;
 using TARge25Shop.Data;
@@ -52,7 +53,8 @@ namespace TARge25Shop.Controllers
                 Area = vm.Area,
                 Location = vm.Location,
                 RoomNumber = vm.RoomNumber,
-                BuildingType = vm.BuildingType
+                BuildingType = vm.BuildingType,
+                Files = vm.Files // ДОБАВЛЕНО
             };
 
             var result = await _realEstateServices.Create(dto);
@@ -85,6 +87,17 @@ namespace TARge25Shop.Controllers
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
 
+            vm.Image = await _context.FileToDatabases
+                .Where(x => x.RealEstateId == id)
+                .Select(x => new FileToDatabaseViewModel
+                {
+                    ImageId = x.Id,
+                    ImageTitle = x.ImageTitle,
+                    ImageData = x.ImageData,
+                    RealEstateId = x.RealEstateId
+                })
+                .ToListAsync();
+
             return View("CreateUpdate", vm);
         }
 
@@ -99,7 +112,8 @@ namespace TARge25Shop.Controllers
                 RoomNumber = vm.RoomNumber,
                 BuildingType = vm.BuildingType,
                 CreatedAt = vm.CreatedAt,
-                ModifiedAt = vm.ModifiedAt
+                ModifiedAt = vm.ModifiedAt,
+                Files = vm.Files 
             };
 
             var result = await _realEstateServices.Update(dto);
@@ -168,7 +182,33 @@ namespace TARge25Shop.Controllers
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
 
+            vm.Image = await _context.FileToDatabases
+                .Where(x => x.RealEstateId == id)
+                .Select(x => new FileToDatabaseViewModel
+                {
+                    ImageId = x.Id,
+                    ImageTitle = x.ImageTitle,
+                    ImageData = x.ImageData,
+                    RealEstateId = x.RealEstateId
+                })
+                .ToListAsync();
+
             return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(Guid imageId, Guid realEstateId)
+        {
+            var image = await _context.FileToDatabases
+                .FirstOrDefaultAsync(x => x.Id == imageId);
+
+            if (image != null)
+            {
+                _context.FileToDatabases.Remove(image);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Update), new { id = realEstateId });
         }
     }
 }
