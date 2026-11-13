@@ -30,7 +30,12 @@ namespace TARge25Shop.ApplicationServices.Services
             realEstate.CreatedAt = DateTime.Now;
             realEstate.ModifiedAt = DateTime.Now;
 
-            UploadFilesToDatabase(dto, realEstate);
+            //info kui ankeedis on pildid, siis kutsu faili salvestamine välja 
+            if (dto.Files != null)
+            {
+                UploadFilesToDatabase(dto, realEstate);
+            }
+
 
             _context.RealEstates.Add(realEstate);
             await _context.SaveChangesAsync();
