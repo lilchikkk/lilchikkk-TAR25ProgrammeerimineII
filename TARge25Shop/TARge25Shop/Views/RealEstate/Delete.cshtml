@@ -1,30 +1,66 @@
 ﻿@model TARge25Shop.Models.RealEstate.RealEstateDeleteViewModel
 
-@{
-    ViewData["Title"] = "Delete real estate";
-}
-
 <div class="theme-blue">
-    <div class="panel panel-danger narrow">
-        <div class="text-center">
-            <div class="empty-emoji">⚠️</div>
-            <h1>Delete real estate?</h1>
-            <p class="text-muted">This action cannot be undone.</p>
+    <div class="page-header text-center mb-4">
+        <h1>⚠️ Delete real estate?</h1>
+        <p class="text-muted">This action cannot be undone.</p>
+    </div>
+
+    <div class="panel narrow">
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <small class="text-secondary d-block mb-1">Location</small>
+                    <span class="fw-semibold fs-6">📍 @Model.Location</span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <small class="text-secondary d-block mb-1">Area</small>
+                    <span class="fw-semibold fs-6">📐 @Model.Area m²</span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <small class="text-secondary d-block mb-1">Rooms</small>
+                    <span class="fw-semibold fs-6">🛏️ @Model.RoomNumber</span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <small class="text-secondary d-block mb-1">Building Type</small>
+                    <span class="fw-semibold fs-6">🏢 @Model.BuildingType</span>
+                </div>
+            </div>
         </div>
 
-        <div class="info-grid single">
-            <div class="info-item"><span>Location</span><strong>📍 @Model.Location</strong></div>
-            <div class="info-item"><span>Area</span><strong>📐 @Model.Area m²</strong></div>
-            <div class="info-item"><span>Rooms</span><strong>🛏 @Model.RoomNumber</strong></div>
-            <div class="info-item"><span>Building type</span><strong>🏢 @Model.BuildingType</strong></div>
-            <div class="info-item"><span>Created at</span><strong>@(Model.CreatedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</strong></div>
-            <div class="info-item"><span>Modified at</span><strong>@(Model.ModifiedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</strong></div>
-        </div>
+        @if (Model.Image != null && Model.Image.Any())
+        {
+            <hr class="border-secondary opacity-25 my-4" />
+            <h6 class="text-secondary mb-3">Attached images</h6>
+            <div class="row g-3 mb-4">
+                @foreach (var img in Model.Image)
+                {
+                    <div class="col-6 col-md-4">
+                        <div class="rounded-3 overflow-hidden border border-secondary border-opacity-25">
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(img.ImageData)"
+                                 alt="@img.ImageTitle"
+                                 class="w-100"
+                                 style="height: 120px; object-fit: cover;" />
+                        </div>
+                    </div>
+                }
+            </div>
+        }
 
-        <form asp-action="DeleteConfirmation" class="mt-4 d-flex gap-2 justify-content-center">
+        <form asp-action="DeleteConfirmation" asp-controller="RealEstate" method="post" class="d-flex justify-content-center gap-2 mt-4">
             <input type="hidden" asp-for="Id" />
-            <input type="submit" value="Yes, delete" class="btn btn-danger" />
-            <a asp-action="Index" asp-controller="realEstate" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger px-4">Yes, delete</button>
+            <a asp-action="Index" asp-controller="RealEstate" class="btn btn-secondary px-4">Cancel</a>
         </form>
     </div>
 </div>

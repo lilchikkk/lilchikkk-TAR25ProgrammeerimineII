@@ -10,7 +10,7 @@
     </div>
 
     <div class="panel narrow">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" asp-action="@(Model.Id.HasValue ? "Update" : "Create")">
             <input asp-for="Id" type="hidden" />
             <input asp-for="CreatedAt" type="hidden" />
             <input asp-for="ModifiedAt" type="hidden" />
@@ -35,7 +35,6 @@
                 <input asp-for="BuildingType" class="form-control" />
             </div>
 
-
             <div class="mb-3">
                 <label asp-for="Files" class="form-label">Images</label>
                 <input asp-for="Files" type="file" multiple class="form-control" />
@@ -44,16 +43,10 @@
             <hr />
 
             <div class="d-flex gap-2">
-                @if (Model.Id.HasValue)
-                {
-                    <input asp-action="update" asp-controller="realEstate" type="submit" class="btn btn-success" value="Update" />
-                }
-                else
-                {
-                    <input asp-action="create" asp-controller="realEstate" type="submit" class="btn btn-success" value="Create" />
-                }
-
-                <a asp-action="Index" asp-controller="realEstate" class="btn btn-secondary">Back to List</a>
+                <button type="submit" class="btn btn-success">
+                    @(Model.Id.HasValue ? "Update" : "Create")
+                </button>
+                <a asp-action="Index" asp-controller="RealEstate" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
 
@@ -61,18 +54,23 @@
         {
             <hr />
             <h5>Saved images</h5>
-            @foreach (var img in Model.Image)
-            {
-                <div class="mb-2">
-                    <img src="@img.Image" alt="@img.ImageTitle" style="max-width:200px" />
+            <div class="row">
+                @foreach (var img in Model.Image)
+                {
+                    <div class="col-md-3 mb-3 text-center">
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(img.ImageData)"
+                             alt="@img.ImageTitle"
+                             class="img-thumbnail mb-2"
+                             style="max-height: 150px; object-fit: cover;" />
 
-                    <form asp-action="RemoveImage" asp-controller="realEstate" method="post" class="d-inline">
-                        <input type="hidden" name="imageId" value="@img.ImageId" />
-                        <input type="hidden" name="realEstateId" value="@Model.Id" />
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </div>
-            }
+                        <form asp-action="RemoveImage" asp-controller="RealEstate" method="post">
+                            <input type="hidden" name="imageId" value="@img.ImageId" />
+                            <input type="hidden" name="realEstateId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                }
+            </div>
         }
     </div>
 </div>

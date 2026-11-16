@@ -146,6 +146,18 @@ namespace TARge25Shop.Controllers
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
 
+
+            vm.Image  = await _context.FileToDatabases
+                .Where(x => x.RealEstateId == id)
+                .Select(x => new FileToDatabaseViewModel
+                {
+                    ImageId = x.Id,
+                    ImageTitle = x.ImageTitle,
+                    ImageData = x.ImageData,
+                    RealEstateId = x.RealEstateId
+                })
+                .ToListAsync();
+
             return View(vm);
         }
 
