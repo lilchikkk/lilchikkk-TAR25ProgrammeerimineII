@@ -11,15 +11,18 @@ namespace TARge25Shop.Controllers
     {
         private readonly IRealEstateServices _realEstateServices;
         private readonly TARge25ShopContext _context;
+        private readonly IFileServices _fileServices;
 
         public RealEstateController
             (
                 IRealEstateServices realEstateServices,
-                TARge25ShopContext context
+                TARge25ShopContext context,
+                IFileServices fileServices
             )
         {
             _realEstateServices = realEstateServices;
             _context = context;
+            _fileServices = fileServices;
         }
 
         public IActionResult Index()
@@ -113,8 +116,16 @@ namespace TARge25Shop.Controllers
                 BuildingType = vm.BuildingType,
                 CreatedAt = vm.CreatedAt,
                 ModifiedAt = vm.ModifiedAt,
-                Files = vm.Files 
-            };
+                Files = vm.Files,
+                 Image = vm.Image
+                    .Select(x => new FileToDatabaseDto
+                    {
+                        Id = x.ImageId,
+                        ImageData = x.ImageData,
+                        ImageTitle = x.ImageTitle,
+                        RealEstateId = x.RealEstateId
+                    }).ToArray()
+        };
 
             var result = await _realEstateServices.Update(dto);
 
@@ -209,18 +220,21 @@ namespace TARge25Shop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveImage(Guid imageId, Guid realEstateId)
+        public async Task<IActionResult> RemoveImage(RealEstateImageViewModel vm)
         {
-            var image = await _context.FileToDatabases
-                .FirstOrDefaultAsync(x => x.Id == imageId);
-
-            if (image != null)
+            var dto = new FileToDatabaseDto
             {
-                _context.FileToDatabases.Remove(image);
-                await _context.SaveChangesAsync();
+                Id = vm.ImageId
+            };
+
+            var image = await _fileServices.RemoveImageFromDatabase(dto);
+
+            if (image == null)
+            {
+                return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Update), new { id = realEstateId });
+            return RedirectToAction(nameof(Update), new { id = vm.RealEstateId });
         }
     }
 }

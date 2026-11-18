@@ -18,6 +18,7 @@ namespace TARge25Shop
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             builder.Services.AddScoped<IKindergartenServices, KindergartenServices>();
 
+
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
