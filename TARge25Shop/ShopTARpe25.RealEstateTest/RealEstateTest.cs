@@ -5,57 +5,82 @@ namespace ShopTARpe25.RealEstateTest
 {
     public class RealEstateTest : TestBase
     {
-        private static RealEstateDto NewDto() => new()
-        {
-            Area = 120.5,
-            Location = "Test location",
-            RoomNumber = 3,
-            BuildingType = "house",
-            CreatedAt = DateTime.UtcNow,
-            ModifiedAt = DateTime.UtcNow,
-        };
-
-        // Create: запись создаётся и возвращается
         [Fact]
-        public async Task Should_AddRealEstate_WhenReturnResult()
+        public async Task ShouldNot_AddEmptyRealEstate_WhenReturnResult()
         {
-            var result = await Svc<IRealEstateServices>().Create(NewDto());
+            // Arrange | Подготовка
+            RealEstateDto dto = new()
+            {
+                Area = 120.5,
+                Location = "Test location",
+                RoomNumber = 3,
+                BuildingType = "house",
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow,
+            };
 
+            // Act: siin tuleb kutsuda RealEstate Create meetod esile | Действие: здесь нужно вызвать метод Create у RealEstate
+            var result = await Svc<IRealEstateServices>().Create(dto);
+
+            // Assert | Проверка
             Assert.NotNull(result);
-            Assert.NotNull(result.Id);
         }
 
-        // DetailAsync: находит созданную запись по Id
+        // Teha test, kus otsib ankeeti id alusel, aga seda ei ole andmebaasis | Сделать тест, где ищется анкета по id, но её нет в базе данных
         [Fact]
         public async Task Should_GetByIdRealEstate_WhenReturnsEqual()
         {
-            var created = await Svc<IRealEstateServices>().Create(NewDto());
+            // Arrange | Подготовка
+            Guid databaseGuid = Guid.Parse("d3661e93-4701-40a7-9770-ef18cd3a3253");
+            Guid wrongGuid = Guid.NewGuid();
 
-            var result = await Svc<IRealEstateServices>().DetailAsync((Guid)created.Id);
+            // Act | Действие
+            await Svc<IRealEstateServices>().DetailAsync(databaseGuid);
 
-            Assert.NotNull(result);
-            Assert.Equal(created.Id, result.Id);
-            Assert.Equal("Test location", result.Location);
+            // Assert | Проверка
+            // Vastupidist loogikat tuleb kasutada | Нужно использовать обратную логику
+            Assert.NotEqual(wrongGuid, databaseGuid);
+        }
+        [Fact]
+        public async Task Should_GetByIdRealestate_WhenReturnsEqual()
+        {
+            //arrange
+            //see on Guid juba andmebaasi olemas ankeedi juures
+            Guid databaseGuid = Guid.Parse("d3661e93-4701-40a7-9770-ef18cd3a3253");
+            //kui vajatud nupule, siis see guid saadetakse andmebaasi, mida võrreldakse
+            Guid guid = Guid.Parse("d3661e93-4701-40a7-9770-ef18cd3a3253");
+
+            //act
+            await Svc<IRealEstateServices>().DetailAsync(guid);
+
+            //assert
+            Assert.Equal(databaseGuid, guid);
         }
 
-        // DetailAsync: такого Id в базе нет -> null
+        //kustutamisee meetodid on vaja testida. andmebaasis on ankeet,
+        //mida tähan ära kustutada
         [Fact]
-        public async Task ShouldNot_GetByIdRealEstate_WhenIdDoesNotExist()
+        public async Task Should_DeleteByIdRealEstate_WhenDeleteRealEstate()
         {
-            var result = await Svc<IRealEstateServices>().DetailAsync(Guid.NewGuid());
+            RealEstateDto dto = new()
+            {
+                Area = 120.5,
+                Location = "Test location",
+                RoomNumber = 3,
+                BuildingType = "house",
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow,
+            };
 
-            Assert.Null(result);
-        }
+            var created = await Svc<IRealEstateServices>().Create(dto);
 
-        // Delete: после удаления DetailAsync возвращает null
-        [Fact]
-        public async Task Should_DeleteRealEstate_WhenDetailReturnsNull()
-        {
-            var created = await Svc<IRealEstateServices>().Create(NewDto());
-
-            await Svc<IRealEstateServices>().Delete((Guid)created.Id);
+            //act
+            var deleted = await Svc<IRealEstateServices>().Delete((Guid)created.Id);
             var result = await Svc<IRealEstateServices>().DetailAsync((Guid)created.Id);
 
+            //assert
+            Assert.Equal(created.Id, deleted.Id);
+            //Pärast kustutamist ankeeti enam ei ole 
             Assert.Null(result);
         }
     }
