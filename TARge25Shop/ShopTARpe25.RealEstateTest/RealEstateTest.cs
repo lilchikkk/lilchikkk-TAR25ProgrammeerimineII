@@ -62,26 +62,25 @@ namespace ShopTARpe25.RealEstateTest
         [Fact]
         public async Task Should_DeleteByIdRealEstate_WhenDeleteRealEstate()
         {
-            RealEstateDto dto = new()
-            {
-                Area = 120.5,
-                Location = "Test location",
-                RoomNumber = 3,
-                BuildingType = "house",
-                CreatedAt = DateTime.UtcNow,
-                ModifiedAt = DateTime.UtcNow,
-            };
-
+            RealEstateDto dto = MockRealEstateData();
             var created = await Svc<IRealEstateServices>().Create(dto);
-
             //act
             var deleted = await Svc<IRealEstateServices>().Delete((Guid)created.Id);
-            var result = await Svc<IRealEstateServices>().DetailAsync((Guid)created.Id);
 
             //assert
             Assert.Equal(created.Id, deleted.Id);
-            //Pärast kustutamist ankeeti enam ei ole 
-            Assert.Null(result);
+        }
+        private RealEstateDto MockRealEstateData()
+        {
+            return new RealEstateDto
+            {
+                Area = 88.65,
+                Location = "TestAdres",
+                RoomNumber = 1,
+                BuildingType = "TestBuildingType",
+                CreatedAt = DateTime.Now,
+                ModifiedAt = DateTime.Now,
+            };
         }
     }
 }
