@@ -12,6 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 // Testide makrode kaasamine | Подключение макросов для тестов
 using ShopTARpe25.RealEstateTest.Macros;
+// Hosti keskkonna kaasamine | Подключение окружения хоста (IHostEnvironment)      // <-- ДОБАВИТЬ
+using Microsoft.Extensions.Hosting;                                                // <-- ДОБАВИТЬ
+// Võlts keskkonna kaasamine testideks | Подключение поддельного окружения для тестов  // <-- ДОБАВИТЬ
+using ShopTARpe25.RealEstateTest.Mock;                                             // <-- ДОБАВИТЬ
 
 namespace ShopTARpe25.RealEstateTest
 {
@@ -37,6 +41,12 @@ namespace ShopTARpe25.RealEstateTest
         {
             // Seob liidese IRealEstateServices klassiga RealEstateServices | Связывает интерфейс IRealEstateServices с классом RealEstateServices
             services.AddScoped<IRealEstateServices, RealEstateServices>();
+
+            // Seob liidese IFileServices klassiga FileServices (RealEstateServices vajab seda) | Связывает интерфейс IFileServices с классом FileServices (нужен для RealEstateServices)   // <-- ДОБАВИТЬ
+            services.AddScoped<IFileServices, FileServices>();                                                                                                                              // <-- ДОБАВИТЬ
+
+            // Seob IHostEnvironment võlts-klassiga (FileServices vajab seda) | Связывает IHostEnvironment с поддельным классом (нужен для FileServices)                              // <-- ДОБАВИТЬ
+            services.AddScoped<IHostEnvironment, MockIHostEnvironment>();                                                                                                                   // <-- ДОБАВИТЬ
 
             // Registreerib andmebaasi konteksti | Регистрирует контекст базы данных
             services.AddDbContext<TARge25ShopContext>(x =>
