@@ -118,6 +118,8 @@ namespace ShopTARpe25.RealEstateTest
             Assert.NotEqual(dto.RoomNumber, domain.RoomNumber);
             //võrrelda RoomNumbrit ja kasutada DoesNotMatch
             Assert.DoesNotMatch(dto.RoomNumber.ToString(), domain.RoomNumber.ToString());
+            Assert.DoesNotMatch(dto.Location.ToString(), domain.Location.ToString());
+
         }
 
         private RealEstateDto MockRealEstateData()
