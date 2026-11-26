@@ -119,6 +119,11 @@ namespace ShopTARpe25.RealEstateTest
             //võrrelda RoomNumbrit ja kasutada DoesNotMatch
             Assert.DoesNotMatch(dto.RoomNumber.ToString(), domain.RoomNumber.ToString());
             Assert.DoesNotMatch(dto.Location.ToString(), domain.Location.ToString());
+        }
+        //---------------------------------
+        [Fact]
+        public async Task Should_UpdateRealEstate_WhenUpdateDataVersion2()
+        {
 
         }
 
